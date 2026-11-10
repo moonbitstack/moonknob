@@ -1,65 +1,88 @@
-# CHANGE-ME
+# moonknob
 
-One sentence saying what this is.
+Which of two settings wins, and what to do when they disagree. Every moonbitstack
+library that takes a configuration record and flat arguments beside it resolves the
+two through this module, so the rules below hold across the family.
+
+## Configuration precedence
+
+```
+library preset  <  the record passed in  <  this call's argument of the same name
+```
+
+The more specific a setting, the later it applies: the order Axios, Terraform and
+Spring Boot share. Two parameters change it, and both take a default chosen per
+function, written in that function's documentation:
+
+- `wins : Wins` is `Extra` (the argument wins) or `Base` (the record wins). `Base` is
+  for a function whose starting point is an authority, such as the header a JWT
+  signature is made under.
+- `clash : OnClash[T]` says what happens when a setting is given twice with
+  different values:
+
+| Variant | Result | Says |
+|:--:|:--:|:--:|
+| `Ignore` | what `wins` chose | nothing |
+| `Warn(f)` | what `wins` chose | one line to `f` |
+| `Panic` | aborts | the message |
+| `Handle(f)` | what `f` returns | `f` gets a `Clash[T]`: the names, the base, the merged value |
+
+The same value given twice is not a clash, and `Warn` and `Handle` are not called
+for it. The library never prints: `Warn` takes a function, so the line goes to
+moonlog or wherever the program writes.
+
+## Writing a function that takes a record
 
 ```moonbit
-println(@CHANGE-ME.greet("moonbit"))
+struct Options {
+  timeout : Int32
+  retries : Int32
+}
+
+let options : Options = { timeout: 30, retries: 3 }
+
+fn connect(
+  options~ : Options = options,
+  timeout? : Int32,
+  retries? : Int32,
+  wins~ : @moonknob.Wins = Extra,
+  clash~ : @moonknob.OnClash[Options] = Ignore,
+) -> Options {
+  let merge = @moonknob.Merge::new(wins)
+  let merged = {
+    timeout: merge.pick("timeout", options.timeout, timeout),
+    retries: merge.pick("retries", options.retries, retries),
+  }
+  merge.settle(clash, options, merged, "connect: options and arguments")
+}
 ```
 
-Run `moon run src/examples/tour` for the whole surface in one go.
+`pick` takes one field: the name, the record's value, and the argument as the caller
+gave it (`None` when it did not). `union` does the same for two maps, key by key,
+with the keys of the first in their order and then the new ones of the second.
+`settle` applies `clash` to what was gathered. A function that gathers names some
+other way calls `OnClash::settle` with them.
 
-## Starting from this template
+## Calling one
 
-1. `gh repo create moonbitstack/<name> --template moonbitstack/moonkit --public`
-2. Replace `CHANGE-ME` everywhere: `moon.mod` (name and repository), the
-   `moon.pkg` files and sources that import the library, and this file's title.
-3. The library is the root package in `src/`, so users write `@<name>.f`. Split it
-   into subpackages named after what they do (`base64/`, `sha2/`, `jwt/`) only
-   where a user would want one without the rest. Delete `src/cmd/` if the
-   repository ships no binary.
-4. Fill in `keywords` and `description` in `moon.mod`. The description is what
-   mooncakes shows, so it says what the package is and what it is not.
-5. Write the specification link into every `moon.pkg`.
-6. Rename `docs/skills/CHANGE-ME/` to the library's name and write its `SKILL.md`:
-   how to add the library, the common tasks with code that compiles against the
-   published version, and the rules that catch people out.
-
-## What is here and what is not
-
-| Carried | Why |
-|:--|:--|
-| `.github/workflows/` | GitHub does not inherit workflows; every repository needs its own copy |
-| `moon.mod`, `src/`, `src/cmd/main/`, `src/examples/tour/` | Sources under `src/` so the root holds only entry points; the library is the root package, the binary and the examples sit beside it |
-| `docs/skills/` | The Agent Skill for the library, released with each version and carried inside the module |
-| `.gitignore`, `.moonignore` | The second one exists because `.gitignore`'s `!.git*` would otherwise pull the whole object database into a published tarball |
-| `LICENSE` | Apache-2.0, the same across the organisation |
-
-**Issue and pull-request templates are not here.** The organisation's `.github`
-repository supplies them to every repository that has none of its own; a copy
-here would shadow that one and then drift from it. A repository adds its own
-only when it needs something the organisation's does not cover.
-
-## The gate
-
-Every commit passes this, with each exit code seen to be zero:
-
-```bash
-moon clean && moon fmt && moon check --target all --deny-warn \
-  && moon build --target all && moon test --target all
+```moonbit
+let mine = { timeout: 5, retries: 1 }
+let a = connect(options=mine, timeout=10)
+let b = connect(options=mine, timeout=10, wins=Base)
+let c = connect(options=mine, timeout=10, clash=Warn(line => println(line)))
+let d = connect(
+  options=mine,
+  timeout=10,
+  retries=9,
+  clash=Handle(seen => { ..seen.merged, retries: seen.base.retries }),
+)
 ```
 
-Before a release, `moon info --target all && git diff --exit-code` as well: the
-generated interface is checked in, and a difference means the interface moved
-without anyone saying so.
+`a` and `c` time out after 10; `b` keeps the record's 5, and `d` keeps the
+record's retries while taking the argument's timeout. `c` printed
+`connect: options and arguments: timeout given twice with different values`.
 
-## Releasing
-
-Push a signed tag `v<version>`. `release.yml` runs the tests first and publishes
-only if they pass and the organisation variable `MOONCAKES_PUBLISH` is `true`.
-Each skill under `docs/skills/` then goes to [mooncakes.io/skills](https://mooncakes.io/skills)
-at the same version, in a job of its own so that rerunning a failure does not
-publish the module twice. Releases cannot be overwritten or deleted, so a mistake
-means the next version. The major version stays at 0.
+Run `moon run src/examples/tour` for the same in one go.
 
 ## Licence
 

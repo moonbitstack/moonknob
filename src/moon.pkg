@@ -1,2 +1,5 @@
-// What this package implements, and a first-hand link to the specification it
-// implements. A package without that link is not finished.
+// The precedence of a configuration record and the per-call arguments beside it.
+// The order is the one Axios, Terraform and Spring Boot share:
+// https://axios-http.com/docs/config_defaults
+// https://developer.hashicorp.com/terraform/language/values/variables#variable-definition-precedence
+// https://docs.spring.io/spring-boot/reference/features/external-config.html

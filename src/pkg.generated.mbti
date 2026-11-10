@@ -1,12 +1,48 @@
 // Generated using `moon info`, DON'T EDIT IT
-package "moonbitstack/CHANGE-ME"
+package "moonbitstack/moonknob"
+
+import {
+  "moonbitlang/core/debug",
+}
 
 // Values
-pub fn greet(StringView) -> String
 
 // Errors
 
 // Types and methods
+#derive(Eq, @debug.Debug)
+pub(all) struct Clash[T] {
+  names : Array[String]
+  base : T
+  merged : T
+}
+pub fn[T : Eq] Clash::equal(Self[T], Self[T]) -> Bool
+pub fn[T : Eq] Clash::not_equal(Self[T], Self[T]) -> Bool
+pub fn[T : @debug.Debug] Clash::to_repr(Self[T]) -> @debug.Repr
+
+type Merge
+pub fn Merge::names(Self) -> ArrayView[String]
+pub fn Merge::new(Wins) -> Self
+pub fn[V : Eq] Merge::pick(Self, String, V, V?) -> V
+pub fn[T] Merge::settle(Self, OnClash[T], T, T, String) -> T
+pub fn[V : Eq] Merge::union(Self, Map[String, V], Map[String, V]) -> Map[String, V]
+
+pub(all) enum OnClash[T] {
+  Ignore
+  Warn((String) -> Unit)
+  Panic
+  Handle((Clash[T]) -> T)
+}
+pub fn[T] OnClash::settle(Self[T], T, T, Array[String], String) -> T
+
+#derive(Eq, @debug.Debug)
+pub(all) enum Wins {
+  Base
+  Extra
+}
+pub fn Wins::equal(Self, Self) -> Bool
+pub fn Wins::not_equal(Self, Self) -> Bool
+pub fn Wins::to_repr(Self) -> @debug.Repr
 
 // Type aliases
 
