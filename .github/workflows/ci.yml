@@ -76,3 +76,22 @@ jobs:
       - name: the code in the docs compiles
         if: runner.os == 'Linux'
         run: python3 scripts/check_snippets.py
+
+      # The reference page and the test vectors are written from the sources, so the committed
+      # copies have to be what a rerun would write. A Windows checkout would only differ in line
+      # endings, which the .gitattributes rule already holds to LF.
+      - name: the reference is what the sources say
+        if: runner.os == 'Linux'
+        run: |
+          python3 scripts/gen_api.py
+          git diff --exit-code docs/api.html
+
+      - name: the union vectors are what the two implementations say
+        if: runner.os == 'Linux'
+        run: python3 scripts/differential/gen_union_vectors.py --check
+
+      # The plate on the site is this package compiled to JavaScript; if it stops building, the
+      # page would fall back to a still dial, which is easy to miss.
+      - name: the plate compiles
+        if: runner.os == 'Linux'
+        run: moon build --target js --release src/examples/browser
