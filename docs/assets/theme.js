@@ -1,8 +1,20 @@
-// Runs before the first paint: the theme is either the one picked during this
-// visit or whatever the system prefers, and a refresh goes back to the system.
+// Runs before the first paint: the theme is the one picked earlier in this visit,
+// or whatever the system prefers. A refresh is not "earlier in this visit", so it
+// drops the choice and follows the system again.
+
 (() => {
+  const key = "moonknob-theme";
+  const navigations = performance.getEntriesByType
+    ? performance.getEntriesByType("navigation")
+    : [];
+  const reload =
+    navigations[0]?.type === "reload" || performance.navigation?.type === 1;
   try {
-    const saved = sessionStorage.getItem("moonknob-theme");
+    if (reload) {
+      sessionStorage.removeItem(key);
+      return;
+    }
+    const saved = sessionStorage.getItem(key);
     if (saved === "light" || saved === "dark") {
       document.documentElement.dataset.theme = saved;
     }
