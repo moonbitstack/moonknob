@@ -5,19 +5,22 @@
 /// Lays what a caller gave over what a function starts from, one setting at a
 /// time, and keeps the names of those that disagreed for `settle`.
 ///
-///     let merge = @moonknob.Merge::new(wins)
-///     let merged = {
-///       ..policy,
-///       leeway: merge.pick("leeway", policy.leeway, leeway),
-///       expiry: merge.pick("expiry", policy.expiry, expiry),
-///     }
-///     merge.settle(clash, policy, merged, "jwt.verify: policy and arguments")
+/// ```mbt check
+/// test {
+///   let merge = @moonknob.Merge::new(Extra)
+///   let timeout = merge.pick("timeout", 30, Some(10))
+///   assert_eq(timeout, 10)
+///   assert_eq(merge.names().to_owned(), ["timeout"])
+/// }
+/// ```
 struct Merge {
   wins : Wins
   names : Array[String]
 }
 
 ///|
+/// A merge that has recorded nothing yet and takes `wins` for every setting it
+/// is handed from here on.
 pub fn Merge::new(wins : Wins) -> Merge {
   { wins, names: [], }
 }

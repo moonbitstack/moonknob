@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='13' fill='%23f0ece1' stroke='%2316171a' stroke-width='2'/%3E%3Cline x1='16' y1='16' x2='16' y2='6.5' stroke='%239a4520' stroke-width='2.5' stroke-linecap='round'/%3E%3Ccircle cx='16' cy='16' r='2.2' fill='%2316171a'/%3E%3C/svg%3E">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>API · moonknob</title>
+<meta name="description" content="Every public type, function and value of moonknob, with the notes the source carries.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="assets/theme.js"></script>
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+
+<header class="masthead wrap">
+  <a class="wordmark" href="./">
+    <svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="12.5" fill="none" stroke="currentColor" stroke-width="1.6"/><line x1="16" y1="16" x2="16" y2="6.5" stroke="#9a4520" stroke-width="2.4" stroke-linecap="round"/><circle cx="16" cy="16" r="2.2" fill="currentColor"/></svg>
+    <span>moonknob</span>
+  </a>
+  <nav class="nav">
+    <a href="index.html#order">Order</a>
+    <a href="index.html#use">Guide</a>
+    <a href="api.html" aria-current="page">API</a>
+    <a class="gh" href="https://github.com/moonbitstack/moonknob" aria-label="Source on GitHub" title="Source on GitHub"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8a8 8 0 0 0 5.47 7.59c.4.07.55-.17.55-.38v-1.33c-2.23.48-2.7-1.07-2.7-1.07-.36-.92-.89-1.17-.89-1.17-.73-.5.06-.49.06-.49.8.06 1.23.83 1.23.83.72 1.22 1.88.87 2.34.66.07-.52.28-.87.5-1.07-1.78-.2-3.65-.89-3.65-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48v2.2c0 .21.15.46.55.38A8 8 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg></a>
+    <button class="switch" type="button" aria-label="Switch theme">
+      <svg class="i-moon" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M9.6 1.2a6.4 6.4 0 1 0 5.2 10.1A7.2 7.2 0 0 1 9.6 1.2Z"/></svg>
+      <svg class="i-sun" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="3.1" fill="currentColor"/><g stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><path d="M8 1.1v1.5M8 13.4v1.5M1.1 8h1.5M13.4 8h1.5M3.1 3.1l1.1 1.1M11.8 11.8l1.1 1.1M12.9 3.1l-1.1 1.1M4.2 11.8l-1.1 1.1"/></g></svg>
+    </button>
+  </nav>
+</header>
+
+<main class="wrap doc">
+
+  <aside class="itinerary">
+    <p class="label">In this page</p>
+    <ol>
+      <li><a href="#Clash">Clash</a></li>
+      <li><a href="#Merge">Merge</a></li>
+      <li><a href="#OnClash">OnClash</a></li>
+      <li><a href="#Wins">Wins</a></li>
+    </ol>
+  </aside>
+
+  <article class="page reference">
+
+    <div class="intro">
+      <p class="route">moonbitstack/moonknob · @moonknob</p>
+      <p>A settings record, the flat arguments beside it, and the policy that
+        settles a disagreement. One package, and nothing outside the core library
+        to build it.</p>
+      <p>The order is this: what the library starts from, then the record, then
+        this call's argument. <code>Wins</code> picks the direction and
+        <code>OnClash</code> says what happens when the two disagree.</p>
+    </div>
+
+    <section class="entry" id="Clash">
+      <h3><span class="kind">struct</span>Clash</h3>
+      <div class="prose"></div>
+<pre class="sig">#derive(Eq, Debug)
+pub(all) struct Clash[T] {
+  names : Array[String]
+  base : T
+  merged : T
+}</pre>
+      <table class="members">
+        <tbody>
+          <tr id="Clash-names"><th>names : Array[String]</th><td>The settings that disagreed, in the order the function takes them.</td></tr>
+          <tr id="Clash-base"><th>base : T</th><td>What the function started from.</td></tr>
+          <tr id="Clash-merged"><th>merged : T</th><td>The two laid together the way <code>wins</code> says.</td></tr>
+        </tbody>
+      </table>
+      <p class="traits-label">From the derive</p>
+      <ul class="traits">
+        <li id="Clash-equal"><code>pub fn[T : Eq] Clash::equal(Self[T], Self[T]) -&gt; Bool</code></li>
+        <li id="Clash-not_equal"><code>pub fn[T : Eq] Clash::not_equal(Self[T], Self[T]) -&gt; Bool</code></li>
+        <li id="Clash-to_repr"><code>pub fn[T : @debug.Debug] Clash::to_repr(Self[T]) -&gt; @debug.Repr</code></li>
+      </ul>
+    </section>
+    <section class="entry" id="Merge">
+      <h3><span class="kind">type</span>Merge</h3>
+      <div class="prose"><p>Lays what a caller gave over what a function starts from, one setting at a time, and keeps the names of those that disagreed for <code>settle</code>.</p><pre class="code">test {
+  let merge = @moonknob.Merge::new(Extra)
+  let timeout = merge.pick("timeout", 30, Some(10))
+  assert_eq(timeout, 10)
+  assert_eq(merge.names().to_owned(), ["timeout"])
+}</pre></div>
+<pre class="sig">type Merge</pre>
+      <div class="member" id="Merge-names">
+        <h4><span class="kind">fn</span>Merge::names</h4>
+        <pre class="sig">pub fn Merge::names(self : Merge) -&gt; ArrayView[String]</pre>
+        <div class="prose"><p>The names of the settings that disagreed so far.</p></div>
+      </div>
+      <div class="member" id="Merge-new">
+        <h4><span class="kind">fn</span>Merge::new</h4>
+        <pre class="sig">pub fn Merge::new(wins : Wins) -&gt; Merge</pre>
+        <div class="prose"><p>A merge that has recorded nothing yet and takes <code>wins</code> for every setting it is handed from here on.</p></div>
+      </div>
+      <div class="member" id="Merge-pick">
+        <h4><span class="kind">fn</span>Merge::pick</h4>
+        <pre class="sig">pub fn[V : Eq] Merge::pick(
+  self : Merge,
+  name : String,
+  base : V,
+  given : V?,
+) -&gt; V</pre>
+        <div class="prose"><p>One setting. <code>given</code> is <code>None</code> when the caller did not give it, and then <code>base</code> stands; a value equal to <code>base</code> stands without being a clash.</p></div>
+      </div>
+      <div class="member" id="Merge-settle">
+        <h4><span class="kind">fn</span>Merge::settle</h4>
+        <pre class="sig">pub fn[T] Merge::settle(
+  self : Merge,
+  clash : OnClash[T],
+  base : T,
+  merged : T,
+  site : String,
+) -&gt; T</pre>
+        <div class="prose"><p><code>clash</code> applied to what was gathered: see [<code>OnClash::settle</code>].</p></div>
+      </div>
+      <div class="member" id="Merge-union">
+        <h4><span class="kind">fn</span>Merge::union</h4>
+        <pre class="sig">pub fn[V : Eq] Merge::union(
+  self : Merge,
+  base : Map[String, V],
+  extra : Map[String, V],
+) -&gt; Map[String, V]</pre>
+        <div class="prose"><p>Two maps as one: every key of both, in the order <code>base</code> then <code>extra</code> has them, with <code>wins</code> deciding a key they both hold with different values.</p></div>
+      </div>
+    </section>
+    <section class="entry" id="OnClash">
+      <h3><span class="kind">enum</span>OnClash</h3>
+      <div class="prose"><p>What to do when a setting is given twice with different values.</p><p>The same value given twice is not a clash: there is only one answer, and nothing is reported.</p></div>
+<pre class="sig">pub(all) enum OnClash[T] {
+  Ignore
+  Warn((String) -&gt; Unit)
+  Panic
+  Handle((Clash[T]) -&gt; T)
+}</pre>
+      <table class="members">
+        <tbody>
+          <tr id="OnClash-Ignore"><th>Ignore</th><td>Take what <code>wins</code> says and say nothing. What most libraries do.</td></tr>
+          <tr id="OnClash-Warn"><th>Warn((String) -&gt; Unit)</th><td>Take what <code>wins</code> says and pass one line about it to the function, a
+logger's <code>warn</code> for instance. The library itself prints nothing.</td></tr>
+          <tr id="OnClash-Panic"><th>Panic</th><td>Abort, for where two answers are a mistake in the program rather than a
+choice about configuration.</td></tr>
+          <tr id="OnClash-Handle"><th>Handle((Clash[T]) -&gt; T)</th><td>Pass the clash to the function and take what it returns.</td></tr>
+        </tbody>
+      </table>
+      <div class="member" id="OnClash-settle">
+        <h4><span class="kind">fn</span>OnClash::settle</h4>
+        <pre class="sig">pub fn[T] OnClash::settle(
+  self : OnClash[T],
+  base : T,
+  merged : T,
+  names : Array[String],
+  site : String,
+) -&gt; T</pre>
+        <div class="prose"><p>What a function ends up with, given what it started from, the two laid together, and the settings that disagreed. With no names there was no clash, and <code>merged</code> comes back whatever <code>self</code> is.</p><p><code>site</code> is the call and its two sources, for the warning and the abort: <code>"jwt.verify: policy and arguments"</code>.</p></div>
+      </div>
+    </section>
+    <section class="entry" id="Wins">
+      <h3><span class="kind">enum</span>Wins</h3>
+      <div class="prose"></div>
+<pre class="sig">#derive(Eq, Debug)
+pub(all) enum Wins {
+  Base
+  Extra
+}</pre>
+      <table class="members">
+        <tbody>
+          <tr id="Wins-Base"><th>Base</th><td>What the function starts from: the record, or what it computes itself.</td></tr>
+          <tr id="Wins-Extra"><th>Extra</th><td>What is laid over it: this call's arguments, or the caller's <code>extra</code>.</td></tr>
+        </tbody>
+      </table>
+      <p class="traits-label">From the derive</p>
+      <ul class="traits">
+        <li id="Wins-equal"><code>pub fn Wins::equal(Self, Self) -&gt; Bool</code></li>
+        <li id="Wins-not_equal"><code>pub fn Wins::not_equal(Self, Self) -&gt; Bool</code></li>
+        <li id="Wins-to_repr"><code>pub fn Wins::to_repr(Self) -&gt; @debug.Repr</code></li>
+      </ul>
+    </section>
+  </article>
+
+</main>
+
+<footer>
+  <div class="wrap row">
+    <span><strong>moonknob</strong> · Apache-2.0</span>
+    <a href="https://github.com/moonbitstack/moonknob">source</a>
+    <a href="https://mooncakes.io/docs/moonbitstack/moonknob">mooncakes</a>
+    <a href="./">home</a>
+    <span class="plate-no">plate ii · reference</span>
+  </div>
+</footer>
+
+<script type="module" src="assets/page.js"></script>
+</body>
+</html>
