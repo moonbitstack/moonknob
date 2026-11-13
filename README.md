@@ -102,8 +102,14 @@ program writes.
 
 ```moonbit
 let merge = @moonknob.Merge::new(Extra)
-let heads = merge.union({ "alg": "none", "typ": "JWT" }, { "typ": "JOSE", "kid": "k1" })
-assert_eq(heads.to_array(), [("alg", "none"), ("typ", "JOSE"), ("kid", "k1")])
+let base = { "alg": "none", "typ": "JWT" }
+let extra = { "typ": "JOSE", "kid": "k1" }
+let heads = merge.union(base, extra)
+assert_eq(heads.to_array(), [
+  ("alg", "none"),
+  ("typ", "JOSE"),
+  ("kid", "k1"),
+])
 ```
 
 Key by key under the same two knobs, with the keys of the first side in their

@@ -204,7 +204,8 @@
   clash~ : @moonknob.OnClash[Options] = Ignore,
 ) -> Options {
   let merge = @moonknob.Merge::new(wins)
-  let merged = { ..options, timeout: merge.pick("timeout", options.timeout, timeout) }
+  let picked = merge.pick("timeout", options.timeout, timeout)
+  let merged = { ..options, timeout: picked }
   merge.settle(clash, options, merged, "connect: options and arguments")
 }</code></pre>
   </div>
@@ -221,9 +222,11 @@ assert_eq(connect(options=mine, timeout=10).timeout, 10)
 assert_eq(connect(options=mine, timeout=10, wins=Base).timeout, 5)
 
 let said : Array[String] = []
-let warned = connect(options=mine, timeout=10, clash=Warn(line => said.push(line)))
+let warned = connect(options=mine, timeout=10, clash=Warn(l => said.push(l)))
 assert_eq(warned.timeout, 10)
-assert_eq(said, ["connect: options and arguments: timeout given twice with different values"])</code></pre>
+assert_eq(said, [
+  "connect: options and arguments: timeout given twice with different values",
+])</code></pre>
   </div>
 
   <div class="step">
@@ -233,8 +236,14 @@ assert_eq(said, ["connect: options and arguments: timeout given twice with diffe
         the same two knobs, and keeps the first side's order.</p>
     </div>
     <pre class="code" data-lang="mbt"><code>let merge = @moonknob.Merge::new(Extra)
-let heads = merge.union({ "alg": "none", "typ": "JWT" }, { "typ": "JOSE", "kid": "k1" })
-assert_eq(heads.to_array(), [("alg", "none"), ("typ", "JOSE"), ("kid", "k1")])</code></pre>
+let base = { "alg": "none", "typ": "JWT" }
+let extra = { "typ": "JOSE", "kid": "k1" }
+let heads = merge.union(base, extra)
+assert_eq(heads.to_array(), [
+  ("alg", "none"),
+  ("typ", "JOSE"),
+  ("kid", "k1"),
+])</code></pre>
   </div>
 </section>
 
