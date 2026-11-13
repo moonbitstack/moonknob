@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='13' fill='%23f0ece1' stroke='%2316171a' stroke-width='2'/%3E%3Cline x1='16' y1='16' x2='16' y2='6.5' stroke='%239a4520' stroke-width='2.5' stroke-linecap='round'/%3E%3Ccircle cx='16' cy='16' r='2.2' fill='%2316171a'/%3E%3C/svg%3E">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>moonknob · which of two settings wins</title>
+<meta name="description" content="The precedence a settings record and the flat arguments beside it share: which side wins, and what to do when they disagree.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="assets/theme.js"></script>
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+
+<header class="masthead wrap">
+  <a class="wordmark" href="./">
+    <svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="12.5" fill="none" stroke="currentColor" stroke-width="1.6"/><line x1="16" y1="16" x2="16" y2="6.5" stroke="#9a4520" stroke-width="2.4" stroke-linecap="round"/><circle cx="16" cy="16" r="2.2" fill="currentColor"/></svg>
+    <span>moonknob</span>
+  </a>
+  <nav class="nav">
+    <a href="#order">Order</a>
+    <a href="#use">Guide</a>
+    <a href="api.html">API</a>
+    <a class="gh" href="https://github.com/moonbitstack/moonknob" aria-label="Source on GitHub" title="Source on GitHub"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8a8 8 0 0 0 5.47 7.59c.4.07.55-.17.55-.38v-1.33c-2.23.48-2.7-1.07-2.7-1.07-.36-.92-.89-1.17-.89-1.17-.73-.5.06-.49.06-.49.8.06 1.23.83 1.23.83.72 1.22 1.88.87 2.34.66.07-.52.28-.87.5-1.07-1.78-.2-3.65-.89-3.65-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48v2.2c0 .21.15.46.55.38A8 8 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg></a>
+    <button class="switch" type="button" aria-label="Switch theme">
+      <svg class="i-moon" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M9.6 1.2a6.4 6.4 0 1 0 5.2 10.1A7.2 7.2 0 0 1 9.6 1.2Z"/></svg>
+      <svg class="i-sun" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="3.1" fill="currentColor"/><g stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><path d="M8 1.1v1.5M8 13.4v1.5M1.1 8h1.5M13.4 8h1.5M3.1 3.1l1.1 1.1M11.8 11.8l1.1 1.1M12.9 3.1l-1.1 1.1M4.2 11.8l-1.1 1.1"/></g></svg>
+    </button>
+  </nav>
+</header>
+
+<main>
+
+<section class="hero wrap">
+  <div>
+    <p class="eyebrow">precedence · for moonbit</p>
+    <h1>Two settings.<br>One answer.</h1>
+    <p class="lede">A function that takes a settings record often takes a few flat
+      arguments beside it. This decides which of the two wins, and what to say when
+      they disagree.</p>
+    <p class="install"><code>moon add moonbitstack/moonknob</code></p>
+    <p class="links">
+      <a href="api.html">API reference</a>
+      <a href="#use">Use it in three steps</a>
+    </p>
+  </div>
+
+  <aside class="plate" aria-label="A plate that runs the library: turn the dial to choose which side wins">
+    <div class="plate-head">
+      <span class="tag">live</span>
+      <span>wins</span>
+      <span class="dot" aria-hidden="true"></span>
+    </div>
+
+    <div class="plate-dial">
+      <svg class="dial" viewBox="0 0 260 260" role="slider" tabindex="0"
+        aria-label="Which side wins" aria-valuemin="0" aria-valuemax="1" aria-valuenow="1"
+        aria-valuetext="Extra, this call wins">
+        <circle class="ring" cx="130" cy="130" r="112"/>
+        <g class="ticks" aria-hidden="true"></g>
+        <circle class="face" cx="130" cy="130" r="92"/>
+        <g class="needle" aria-hidden="true" style="transform: rotate(46deg)">
+          <line x1="130" y1="130" x2="130" y2="58"/>
+        </g>
+        <circle class="cap" cx="130" cy="130" r="9"/>
+      </svg>
+      <div class="detents">
+        <span data-wins="0" tabindex="0">base</span>
+        <span data-wins="1" tabindex="0" aria-current="true">extra</span>
+      </div>
+    </div>
+
+    <div class="sources">
+      <div class="source">
+        <span class="source-name">the record</span>
+        <span class="source-value">30</span>
+      </div>
+      <div class="source">
+        <span class="source-name">this call</span>
+        <span class="chooser">
+          <button type="button" data-given="10" aria-pressed="true" aria-label="Give 10 seconds">10</button>
+          <button type="button" data-given="30" aria-pressed="false" aria-label="Give 30 seconds, the same as the record">30</button>
+        </span>
+      </div>
+    </div>
+
+    <div class="answer">
+      <span class="answer-value">10</span>
+      <span class="answer-origin" data-origin="this call">this call</span>
+    </div>
+
+    <p class="note">the same value twice is not a clash</p>
+
+    <div class="keys" role="group" aria-label="What happens when the two disagree">
+      <button type="button" data-clash="0" aria-pressed="true">ignore</button>
+      <button type="button" data-clash="1" aria-pressed="false">warn</button>
+      <button type="button" data-clash="2" aria-pressed="false">panic</button>
+      <button type="button" data-clash="3" aria-pressed="false">handle</button>
+    </div>
+
+    <p class="plate-foot">
+      <span>runs <code>Merge</code> and <code>OnClash</code>, built from this repository</span>
+      <a href="api.html">read it</a>
+    </p>
+  </aside>
+</section>
+
+<section class="wrap" id="order">
+  <div class="head">
+    <span class="no">01</span>
+    <h2>The order</h2>
+    <p>The more specific a setting, the later it applies.</p>
+  </div>
+  <div class="order">
+    <div class="stop">
+      <span class="n">i</span>
+      <h3>Library preset</h3>
+      <p>What the function does when nobody says otherwise, written once beside it.</p>
+    </div>
+    <div class="stop">
+      <span class="n">ii</span>
+      <h3>The record</h3>
+      <p>What the caller passes as the settings record, usually one built from that preset.</p>
+    </div>
+    <div class="stop">
+      <span class="n">iii</span>
+      <h3>This call's argument</h3>
+      <p>The one field this call needs different. It is the most specific, so it wins.</p>
+    </div>
+  </div>
+  <div class="after">
+    <p>An argument beats the record unless the function says <code>wins=Base</code>,
+      which is for a record that is an authority rather than a default: the header a
+      signature is about to be made under, the limits a server enforces.</p>
+    <p>Nothing is overridden in silence. <code>pick</code> keeps the name of every
+      setting that disagreed, and <code>settle</code> hands those names to the
+      <code>clash</code> policy on the way out. The same value twice is one answer,
+      not a disagreement.</p>
+  </div>
+</section>
+
+<section class="wrap" id="when">
+  <div class="head">
+    <span class="no">02</span>
+    <h2>When they disagree</h2>
+    <p>Four answers. Each function documents the one it defaults to.</p>
+  </div>
+  <div class="policies">
+    <div class="policy">
+      <span class="policy-name"><svg viewBox="0 0 14 14" aria-hidden="true"><circle cx="7" cy="7" r="5.2" fill="none" stroke="currentColor" stroke-width="1.3"/><circle cx="7" cy="7" r="1.6" fill="currentColor"/></svg>ignore</span>
+      <p>Take what <code>wins</code> chose and say nothing about it.</p>
+      <span class="who">what most libraries do</span>
+    </div>
+    <div class="policy">
+      <span class="policy-name"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M7 1.4 13 12.4H1Z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M7 5.6v3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>warn</span>
+      <p>Take it, and pass one line to a function the caller supplied: its logger.</p>
+      <span class="who">the library itself never prints</span>
+    </div>
+    <div class="policy">
+      <span class="policy-name"><svg viewBox="0 0 14 14" aria-hidden="true"><rect x="1.6" y="1.6" width="10.8" height="10.8" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M4.4 4.4l5.2 5.2M9.6 4.4l-5.2 5.2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>panic</span>
+      <p>Abort. Nothing after it runs; the message names the settings.</p>
+      <span class="who">a mistake in the program</span>
+    </div>
+    <div class="policy">
+      <span class="policy-name"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7h10M8.4 3.4 12 7l-3.6 3.6" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>handle</span>
+      <p>Pass the names, both sides and the merge; take back what the caller decides.</p>
+      <span class="who">a rule only the caller knows</span>
+    </div>
+  </div>
+</section>
+
+<section class="wrap use" id="use">
+  <div class="head">
+    <span class="no">03</span>
+    <h2>Use it</h2>
+    <p>A record, its flat twin, and one call.</p>
+  </div>
+
+  <div class="step">
+    <div>
+      <h3>Start with the record</h3>
+      <p>The settings a function has anyway. The preset belongs in the default of the
+        record parameter, so a caller who passes nothing gets it.</p>
+    </div>
+    <pre class="code" data-lang="mbt"><code>struct Options {
+  timeout : Int32
+  retries : Int32
+}</code></pre>
+  </div>
+
+  <div class="step">
+    <div>
+      <h3>Lay the arguments over it</h3>
+      <p>One <code>pick</code> per setting worth overriding, then <code>settle</code>.
+        <code>wins</code> and <code>clash</code> are the two knobs; the default is in
+        the signature, where a reader finds it.</p>
+    </div>
+    <pre class="code" data-lang="mbt"><code>fn connect(
+  options~ : Options = { timeout: 30, retries: 3 },
+  timeout? : Int32,
+  wins~ : @moonknob.Wins = Extra,
+  clash~ : @moonknob.OnClash[Options] = Ignore,
+) -> Options {
+  let merge = @moonknob.Merge::new(wins)
+  let merged = { ..options, timeout: merge.pick("timeout", options.timeout, timeout) }
+  merge.settle(clash, options, merged, "connect: options and arguments")
+}</code></pre>
+  </div>
+
+  <div class="step">
+    <div>
+      <h3>Call it, and choose what a clash costs</h3>
+      <p>The argument wins by default. <code>Base</code> turns that round.
+        <code>Warn</code> hands the line to a logger; the line names the function and
+        the settings that disagreed.</p>
+    </div>
+    <pre class="code" data-lang="mbt"><code>let mine = { timeout: 5, retries: 3 }
+assert_eq(connect(options=mine, timeout=10).timeout, 10)
+assert_eq(connect(options=mine, timeout=10, wins=Base).timeout, 5)
+
+let said : Array[String] = []
+let warned = connect(options=mine, timeout=10, clash=Warn(line => said.push(line)))
+assert_eq(warned.timeout, 10)
+assert_eq(said, ["connect: options and arguments: timeout given twice with different values"])</code></pre>
+  </div>
+
+  <div class="step">
+    <div>
+      <h3>Two maps, same rule</h3>
+      <p>Headers, labels, environment maps: <code>union</code> merges key by key with
+        the same two knobs, and keeps the first side's order.</p>
+    </div>
+    <pre class="code" data-lang="mbt"><code>let merge = @moonknob.Merge::new(Extra)
+let heads = merge.union({ "alg": "none", "typ": "JWT" }, { "typ": "JOSE", "kid": "k1" })
+assert_eq(heads.to_array(), [("alg", "none"), ("typ", "JOSE"), ("kid", "k1")])</code></pre>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap row">
+    <span><strong>moonknob</strong> · Apache-2.0</span>
+    <a href="https://github.com/moonbitstack/moonknob">source</a>
+    <a href="https://mooncakes.io/docs/moonbitstack/moonknob">mooncakes</a>
+    <a href="api.html">API</a>
+    <span class="plate-no">plate i · precedence</span>
+  </div>
+</footer>
+
+<script type="module" src="assets/page.js"></script>
+</body>
+</html>
