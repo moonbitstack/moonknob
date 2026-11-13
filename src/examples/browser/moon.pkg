@@ -1,0 +1,7 @@
+import {
+  "moonbitstack/moonknob",
+}
+
+options(
+  link: { "js": { "exports": [ "resolve", "trap" ], "format": "esm" } },
+)

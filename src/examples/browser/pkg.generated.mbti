@@ -1,0 +1,13 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonbitstack/moonknob/examples/browser"
+
+// Values
+pub fn resolve(Int32, Int32, Int32, Int32) -> String
+
+// Errors
+
+// Types and methods
+
+// Type aliases
+
+// Traits
