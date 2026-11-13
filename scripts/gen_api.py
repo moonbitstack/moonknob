@@ -18,7 +18,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 MBTI = ROOT / "src" / "pkg.generated.mbti"
-TEMPLATE = ROOT / "docs" / "api.template.html"
+TEMPLATE = ROOT / "scripts" / "api.template.html"
 OUT = ROOT / "docs" / "api.html"
 
 DECL = re.compile(r"^pub fn\s*(?:\[[^\]]*\]\s*)?([A-Za-z_]\w*)(?:::(\w+))?\s*\(")
