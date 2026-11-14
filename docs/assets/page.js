@@ -33,11 +33,9 @@ if (toggle) {
   });
 }
 
-const dial = document.querySelector(".dial");
+const rocker = document.querySelector(".rocker");
 
-if (dial) {
-  const CENTER = 130;
-  const SPREAD = 46;
+if (rocker) {
   const RECORD = 30;
   const ANSWERS = {
     0: "nothing is reported",
@@ -47,49 +45,19 @@ if (dial) {
   };
   const state = { wins: 1, given: 10, clash: 0 };
 
-  const needle = dial.querySelector(".needle");
-  const ticks = dial.querySelector(".ticks");
-  const detents = [...document.querySelectorAll(".detents span")];
+  const sides = [...rocker.querySelectorAll("button")];
   const choosers = [...document.querySelectorAll(".chooser button")];
   const answers = document.querySelector(".answer-value");
   const origin = document.querySelector(".answer-origin");
   const note = document.querySelector(".note");
   const keys = [...document.querySelectorAll(".keys button")];
 
-  // Thirteen ticks over the travel, drawn once.
-  for (let i = 0; i <= 12; i += 1) {
-    const angle = ((i / 12) * 2 - 1) * SPREAD;
-    const major = i === 0 || i === 6 || i === 12;
-    const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-    const at = (radius) => ({
-      x: CENTER + radius * Math.sin((angle * Math.PI) / 180),
-      y: CENTER - radius * Math.cos((angle * Math.PI) / 180),
-    });
-    const from = at(96);
-    const to = at(major ? 108 : 103);
-    line.setAttribute("x1", from.x.toFixed(2));
-    line.setAttribute("y1", from.y.toFixed(2));
-    line.setAttribute("x2", to.x.toFixed(2));
-    line.setAttribute("y2", to.y.toFixed(2));
-    line.setAttribute("class", major ? "tick major" : "tick");
-    ticks.append(line);
-  }
-
-  const place = (wins, glide = true) => {
-    state.wins = wins;
-    needle.style.transition = glide ? "" : "none";
-    needle.style.transform = `rotate(${(wins === 0 ? -1 : 1) * SPREAD}deg)`;
-    dial.setAttribute("aria-valuenow", String(wins));
-    dial.setAttribute("aria-valuetext", wins === 0 ? "Base, the record wins" : "Extra, this call wins");
-    for (const span of detents) {
-      span.setAttribute("aria-current", String(Number(span.dataset.wins) === wins));
-    }
-    render();
-  };
-
   let engine = null;
 
   const render = () => {
+    for (const button of sides) {
+      button.setAttribute("aria-pressed", String(Number(button.dataset.wins) === state.wins));
+    }
     for (const button of keys) {
       button.setAttribute("aria-pressed", String(Number(button.dataset.clash) === state.clash));
     }
@@ -125,61 +93,24 @@ if (dial) {
     }
   };
 
-  // Dragging: the needle follows the pointer inside the travel and settles on
-  // whichever detent is nearer when it is let go.
-  let dragging = false;
-  const angleOf = (event) => {
-    const box = dial.getBoundingClientRect();
-    const x = event.clientX - (box.left + box.width / 2);
-    const y = event.clientY - (box.top + box.height / 2);
-    return (Math.atan2(x, -y) * 180) / Math.PI;
+  // Two positions, thrown by a press: the switch is the whole control.
+  const place = (wins) => {
+    state.wins = wins;
+    render();
   };
-  dial.addEventListener("pointerdown", (event) => {
-    dragging = true;
-    dial.setPointerCapture(event.pointerId);
-    const angle = Math.max(-SPREAD, Math.min(SPREAD, angleOf(event)));
-    needle.style.transition = "none";
-    needle.style.transform = `rotate(${angle}deg)`;
-  });
-  dial.addEventListener("pointermove", (event) => {
-    if (!dragging) return;
-    const angle = Math.max(-SPREAD, Math.min(SPREAD, angleOf(event)));
-    needle.style.transform = `rotate(${angle}deg)`;
-  });
-  const release = (event) => {
-    if (!dragging) return;
-    dragging = false;
-    dial.releasePointerCapture(event.pointerId);
-    place(angleOf(event) < 0 ? 0 : 1);
-  };
-  dial.addEventListener("pointerup", release);
-  dial.addEventListener("pointercancel", () => {
-    dragging = false;
-    place(state.wins);
-  });
 
-  dial.addEventListener("keydown", (event) => {
-    if (event.key === "ArrowLeft" || event.key === "Home") {
-      place(0);
-      event.preventDefault();
-    } else if (event.key === "ArrowRight" || event.key === "End") {
-      place(1);
-      event.preventDefault();
-    } else if (event.key === " " || event.key === "Enter") {
-      place(state.wins === 0 ? 1 : 0);
+  for (const button of sides) {
+    button.addEventListener("click", () => place(Number(button.dataset.wins)));
+  }
+
+  rocker.addEventListener("keydown", (event) => {
+    if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+      const next = state.wins === 0 ? 1 : 0;
+      place(next);
+      sides[next].focus();
       event.preventDefault();
     }
   });
-
-  for (const span of detents) {
-    span.addEventListener("click", () => place(Number(span.dataset.wins)));
-    span.addEventListener("keydown", (event) => {
-      if (event.key === "Enter" || event.key === " ") {
-        place(Number(span.dataset.wins));
-        event.preventDefault();
-      }
-    });
-  }
 
   for (const button of choosers) {
     button.addEventListener("click", () => {
@@ -195,18 +126,8 @@ if (dial) {
     });
   }
 
-  const start = () => {
-    try {
-      const angle = state.wins === 0 ? -SPREAD : SPREAD;
-      needle.style.transform = `rotate(${angle}deg)`;
-    } catch (error) {
-      // Nothing to place yet.
-    }
-    render();
-  };
-
   // The engine is a build product; without it the plate still reads as a plate.
-  start();
+  render();
   import(new URL("../engine/moonknob.js", import.meta.url))
     .then((module) => {
       engine = module;
@@ -220,12 +141,10 @@ if (dial) {
     copy.addEventListener("click", async () => {
       try {
         await navigator.clipboard.writeText(copy.textContent.trim());
-        copy.dataset.copied = "true";
         const was = copy.textContent;
         copy.textContent = "copied";
         setTimeout(() => {
           copy.textContent = was;
-          delete copy.dataset.copied;
         }, 1400);
       } catch (error) {
         // A browser without clipboard access leaves the line to be selected by hand.

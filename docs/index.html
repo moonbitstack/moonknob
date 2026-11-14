@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='13' fill='%23f0ece1' stroke='%2316171a' stroke-width='2'/%3E%3Cline x1='16' y1='16' x2='16' y2='6.5' stroke='%239a4520' stroke-width='2.5' stroke-linecap='round'/%3E%3Ccircle cx='16' cy='16' r='2.2' fill='%2316171a'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='3' y='8' width='26' height='16' rx='2' fill='%23e6f2dd' stroke='%2316201c' stroke-width='2'/%3E%3Cpath d='M17 10h10v12H17z' fill='%23659287'/%3E%3Cpath d='M16 8v16' stroke='%2316201c' stroke-width='2'/%3E%3C/svg%3E">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>moonknob · which of two settings wins</title>
 <meta name="description" content="The precedence a settings record and the flat arguments beside it share: which side wins, and what to do when they disagree.">
@@ -16,7 +16,7 @@
 
 <header class="masthead wrap">
   <a class="wordmark" href="./">
-    <svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="12.5" fill="none" stroke="currentColor" stroke-width="1.6"/><line x1="16" y1="16" x2="16" y2="6.5" stroke="#9a4520" stroke-width="2.4" stroke-linecap="round"/><circle cx="16" cy="16" r="2.2" fill="currentColor"/></svg>
+    <svg viewBox="0 0 32 32" aria-hidden="true"><rect x="2.6" y="8" width="26.8" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M17 10h10.6v12H17z" fill="currentColor"/><path d="M16 8.4v15.2" stroke="currentColor" stroke-width="1.8"/></svg>
     <span>moonknob</span>
   </a>
   <nav class="nav">
@@ -47,29 +47,16 @@
     </p>
   </div>
 
-  <aside class="plate" aria-label="A plate that runs the library: turn the dial to choose which side wins">
+  <aside class="plate" aria-label="A plate wired to the library: throw the switch to choose which side wins">
     <div class="plate-head">
       <span class="tag">live</span>
       <span>wins</span>
       <span class="dot" aria-hidden="true"></span>
     </div>
 
-    <div class="plate-dial">
-      <svg class="dial" viewBox="0 0 260 260" role="slider" tabindex="0"
-        aria-label="Which side wins" aria-valuemin="0" aria-valuemax="1" aria-valuenow="1"
-        aria-valuetext="Extra, this call wins">
-        <circle class="ring" cx="130" cy="130" r="112"/>
-        <g class="ticks" aria-hidden="true"></g>
-        <circle class="face" cx="130" cy="130" r="92"/>
-        <g class="needle" aria-hidden="true" style="transform: rotate(46deg)">
-          <line x1="130" y1="130" x2="130" y2="58"/>
-        </g>
-        <circle class="cap" cx="130" cy="130" r="9"/>
-      </svg>
-      <div class="detents">
-        <span data-wins="0" tabindex="0">base</span>
-        <span data-wins="1" tabindex="0" aria-current="true">extra</span>
-      </div>
+    <div class="rocker" role="group" aria-label="Which side wins">
+      <button type="button" data-wins="0" aria-pressed="false">base</button>
+      <button type="button" data-wins="1" aria-pressed="true">extra</button>
     </div>
 
     <div class="sources">
@@ -87,7 +74,7 @@
     </div>
 
     <div class="answer">
-      <span class="answer-value">10</span>
+      <span class="answer-value" aria-live="polite">10</span>
       <span class="answer-origin" data-origin="this call">this call</span>
     </div>
 
