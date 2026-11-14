@@ -16,6 +16,7 @@
   --line-soft: color-mix(in srgb, #659287 24%, transparent);
   --accent: #3f6a5c;
   --mark: #659287;
+  --icon: #3d5a4d;
   --on: #1b2b25;
   --on-ink: #e6f2dd;
   --stop: #8c3b28;
@@ -38,6 +39,7 @@
     --line-soft: color-mix(in srgb, #88bda4 17%, transparent);
     --accent: #88bda4;
     --mark: #88bda4;
+    --icon: #e8f2e8;
     --on: #88bda4;
     --on-ink: #0d1a15;
     --stop: #e08a70;
@@ -57,6 +59,7 @@
   --line-soft: color-mix(in srgb, #88bda4 17%, transparent);
   --accent: #88bda4;
   --mark: #88bda4;
+  --icon: #e8f2e8;
   --on: #88bda4;
   --on-ink: #0d1a15;
   --stop: #e08a70;
@@ -213,7 +216,7 @@ kbd {
   align-items: center;
   padding: 0;
   border: 0;
-  color: var(--ink-2);
+  color: var(--icon);
 }
 
 .nav .gh svg {
@@ -229,16 +232,16 @@ kbd {
   width: 25px;
   height: 25px;
   padding: 0;
-  border: 1px solid var(--line);
+  border: 1px solid color-mix(in srgb, var(--icon) 55%, transparent);
   border-radius: 99px;
   background: transparent;
-  color: var(--ink-2);
+  color: var(--icon);
   cursor: pointer;
 }
 
 .switch:hover {
   color: var(--ink);
-  border-color: var(--accent);
+  border-color: var(--icon);
 }
 
 .switch svg {
@@ -248,20 +251,24 @@ kbd {
 }
 
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .switch .i-sun {
+  :root:not([data-theme="light"]) .switch .i-moon {
     display: none;
   }
 }
 
 @media (prefers-color-scheme: light) {
-  :root:not([data-theme="dark"]) .switch .i-moon {
+  :root:not([data-theme="dark"]) .switch .i-sun {
     display: none;
   }
 }
 
-:root[data-theme="light"] .switch .i-sun,
-:root[data-theme="dark"] .switch .i-moon {
+:root[data-theme="light"] .switch .i-moon,
+:root[data-theme="dark"] .switch .i-sun {
   display: none;
+}
+
+.wordmark .cap {
+  fill: var(--ink);
 }
 
 /* Hero */
@@ -666,10 +673,14 @@ section {
 }
 
 .policy-name svg {
-  width: 12px;
-  height: 12px;
+  width: 13px;
+  height: 13px;
   flex: none;
-  color: var(--accent);
+  color: var(--icon);
+}
+
+.policy-name svg [stroke] {
+  stroke-width: 1.7;
 }
 
 .policy p {
