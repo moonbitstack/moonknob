@@ -5,3 +5,6 @@
 _build/
 target/
 docs/engine/
+
+# Examples are read in the repository and run in CI; they do not ship.
+src/examples/
